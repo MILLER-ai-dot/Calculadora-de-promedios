@@ -1,0 +1,2 @@
+Fabian,R,12,Investigacion;Alejandro:Quiroga:222:4.0|5.0|2.0;Miller:Chacon:111:
+Alex,M,13,Programacion;Miller:Chacon:111:;Alejandro:Quiroga:222:
