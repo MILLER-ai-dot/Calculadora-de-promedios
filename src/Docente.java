@@ -1,11 +1,11 @@
 import java.io.Serializable;
 import java.util.*;
-
+import java.text.DecimalFormat;
 public class Docente implements Serializable {
-
+    DecimalFormat formato = new DecimalFormat("0.00");
     private String Nombre;
     private String Apellido;
-    private int Clase;
+    private String Clase;
     private String Materia;
     List<Estudiante> estudiantes = new ArrayList<>();
 
@@ -13,7 +13,7 @@ public class Docente implements Serializable {
     public Docente() {
     }
 
-    public Docente(String nombre, String apellido, int clase, String materia) {
+    public Docente(String nombre, String apellido, String clase, String materia) {
         Nombre = nombre;
         Apellido = apellido;
         Clase = clase;
@@ -37,14 +37,16 @@ public class Docente implements Serializable {
 
                         System.out.println(e.getNombre() + " " + e.getApellido() + " : ");
 
-                    for (int j = 0; j < cantidadNotas; j++) {
+                    for (int j = 0; j <= cantidadNotas; j++) {
                         double nota2;
-                        nota2 = t.nextDouble();
-                        if (nota2 > 0 && nota2 <= 5) {
+                        String nvalidar;
+                        nvalidar = t.next();
+                        if (validarNumero(nvalidar)){
+                            nota2 = Double.parseDouble(nvalidar);
                             s = true;
                             nota.add(nota2);
 
-                        } else System.out.println("Este valor no es valido y por lo tanto no se guardara; ingresa valores entre 0 y 5");
+                        } else System.out.println(Colores.ROJO+"Este valor no es valido y por lo tanto no se guardara; ingresa valores entre 0 y 5"+Colores.CYAN);
 
                     }
                 } while (s == false);
@@ -53,7 +55,7 @@ public class Docente implements Serializable {
                 }
 
 
-        }else System.out.println("No hay estudiantes registrados");
+        }else System.out.println(Colores.ROJO+"No hay estudiantes registrados");
 
 
     }
@@ -86,25 +88,36 @@ public class Docente implements Serializable {
             }
 
             if (!encontrado) {
-                System.out.println("Estudiante no encontrado.");
+                System.out.println(Colores.ROJO+"Estudiante no encontrado.");
             }
 
         } catch (Exception e) {
-            System.out.println("Ocurrió un error al intentar remover el estudiante: " + e.getMessage());
+            System.out.println(Colores.ROJO+"Ocurrió un error al intentar remover el estudiante: " + e.getMessage());
         }
     }
 
     public void visualizar (String nombre , String apellido , String documento){
+        boolean  encontrado=false;
+
         for (Estudiante m: estudiantes){
             if(m.getNombre().equals(nombre) && m.getApellido().equals(apellido)){
-                System.out.println("Tus notas en esta clase son: "+ m.getNotas()+" y tu promedio en esta clase es: "+m.promedio());
+                encontrado=true;
+
+                System.out.println("Tus notas en esta clase son: "+ m.getNotas()+" y tu promedio en esta clase es: "+formato.format(m.promedio()));
             }
         }
+        if (!encontrado){
+            System.out.println(Colores.ROJO+"No estas inscrito a esta clase");
+        }
+
     }
 
     public void visualizarP(){
         for (Estudiante m: estudiantes){
-                System.out.println(m + " Promedio: " + m.promedio());
+                System.out.println(m + " Promedio: " + formato.format(m.promedio()));
+        }
+        if(estudiantes.size()==0){
+            System.out.println(Colores.ROJO+"No hay estudiantes registrados");
         }
     }
 
@@ -116,6 +129,20 @@ public class Docente implements Serializable {
         }
         promedio = p/ estudiantes.size();
         return promedio;
+    }
+
+    public boolean validarInscrito(String nombre, String apellido, String documento){
+        boolean v = true;
+        for (Estudiante e: estudiantes){
+            if (e.getNombre().equals(nombre) && e.getApellido().equals(apellido)&&e.getDocumento().equals(documento)){
+                v = false;
+            };
+        }
+        return v;
+    }
+
+    public  boolean validarNumero(String n) {
+        return n.matches("[0.0-5.0]*");
     }
 
 
@@ -144,11 +171,11 @@ public class Docente implements Serializable {
         Materia = materia;
     }
 
-    public int getClase() {
+    public String getClase() {
         return Clase;
     }
 
-    public void setClase(int clase) {
+    public void setClase(String clase) {
         this.Clase = clase;
     }
 
